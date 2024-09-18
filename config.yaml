@@ -1,12 +1,6 @@
-nginx_version: 1.19.0 # Will be overrided on docker build via ARG NGINX_VERSION
+nginx_version: 1.27.1 # Will be overrided on docker build via ARG NGINX_VERSION
 output_package: deb
 modules:
-#  - module:
-#      name: nginx-auth-ldap
-#      git_url: https://github.com/kvspb/nginx-auth-ldap.git
-#      git_branch: master
-#      dependencies:
-#        - openldap-devel
   - module:
       name: ngx_http_substitutions_filter_module
       git_url: https://github.com/yaoweibin/ngx_http_substitutions_filter_module.git
@@ -14,40 +8,37 @@ modules:
       name: headers-more-nginx-module
       # web_url: https://github.com/openresty/headers-more-nginx-module/archive/v0.261.zip
       git_url: https://github.com/openresty/headers-more-nginx-module.git
-      git_tag: v0.33
+      git_tag: v0.37
   - module:
-      name: nginx-module-vts
-      git_url: https://github.com/vozlt/nginx-module-vts.git
-      git_tag: v0.1.18
+      name: echo-nginx-module
+      git_url: https://github.com/openresty/echo-nginx-module.git
+      git_tag: v0.63
   - module:
-      name: ngx_http_geoip2_module
-      git_url: https://github.com/leev/ngx_http_geoip2_module.git
-      dependencies:
-        - libmaxminddb-dev
-#  - module:
-#      name: ngx_devel_kit
-#      git_url: https://github.com/simplresty/ngx_devel_kit.git
-#      git_tag: v0.3.0
-#  - module:
-#      name: ngx_cache_purge
-#      git_url: https://github.com/FRiCKLE/ngx_cache_purge.git
-#  - module:
-#      name: ngx_http_dyups_module
-#      git_url: https://github.com/yzprofile/ngx_http_dyups_module.git
+      name: encrypted-session-nginx-module
+      git_url: https://github.com/openresty/encrypted-session-nginx-module.git
   - module:
-      name: http_gzip_static_module
-      type: embedded
+      name: ngx_brotli
+      git_url: https://github.com/google/ngx_brotli.git
   - module:
-      name: http_v2_module
-      type: embedded
+      name: incubator-pagespeed-ngx
+      git_url: https://github.com/apache/incubator-pagespeed-ngx.git
   - module:
-      name: http_ssl_module
-      type: embedded
+      name: nginx-http-concat
+      git_url: https://github.com/alibaba/nginx-http-concat.git
+  - module:
+      name: nginx-http-footer-filter
+      git_url: https://github.com/alibaba/nginx-http-footer-filter.git
+  - module:
+      name: ngx_http_tls_dyn_size
+      git_url: https://github.com/nginx-modules/ngx_http_tls_dyn_size.git
   - module:
       name: http_addition_module
       type: embedded
   - module:
       name: http_auth_request_module
+      type: embedded
+  - module:
+      name: http_grpc_module
       type: embedded
   - module:
       name: http_gunzip_module
@@ -56,7 +47,22 @@ modules:
       name: http_gzip_static_module
       type: embedded
   - module:
+      name: http_limit_req_module
+      type: embedded
+  - module:
+      name: http_log_module
+      type: embedded
+  - module:
+      name: http_mirror_module
+      type: embedded
+  - module:
+      name: http_proxy_module
+      type: embedded
+  - module:
       name: http_realip_module
+      type: embedded
+  - module:
+      name: http_rewrite_module
       type: embedded
   - module:
       name: http_secure_link_module
@@ -68,13 +74,70 @@ modules:
       name: http_stub_status_module
       type: embedded
   - module:
+      name: http_ssl_module
+      type: embedded
+  - module:
       name: http_sub_module
+      type: embedded
+  - module:
+      name: http_v2_module
+      type: embedded
+  - module:
+      name: http_v3_module
+      type: embedded
+  - module:
+      name: mail
+      type: embedded
+  - module:
+      name: mail_proxy_module
+      type: embedded
+  - module:
+      name: realip_module
+      type: embedded
+  - module:
+      name: mail_ssl_module
+      type: embedded
+  - module:
+      name: mail_imap_module
+      type: embedded
+  - module:
+      name: mail_pop3_module
+      type: embedded
+  - module:
+      name: stream_core_module
+      type: embedded
+  - module:
+      name: stream_access_module
+      type: embedded
+  - module:
+      name: stream_limit_conn_module
+      type: embedded
+  - module:
+      name: stream_log_module
+      type: embedded
+  - module:
+      name: stream_mqtt_preread_module
+      type: embedded
+  - module:
+      name: stream_mqtt_filter_module
+      type: embedded
+  - module:
+      name: stream_pass_module
+      type: embedded
+  - module:
+      name: stream_proxy_module
+      type: embedded
+  - module:
+      name: stream_set_module
       type: embedded
   - module:
       name: stream_realip_module
       type: embedded
   - module:
+      name: stream_ssl_module
+      type: embedded
+  - module:
       name: stream_ssl_preread_module
       type: embedded
 configure_params:
-  - "--with-openssl-opt='enable-tls1_3'"
+  - "--conf-path=/etc/nginx/nginx.conf --lock-path=/var/run/nginx.lock --pid-path=/var/run/nginx.pid --prefix=/usr/share/nginx --sbin-path=/usr/sbin/nginx --with-cc-opt=-fuse-ld=mold -O3 -march=native -pipe -flto -ffat-lto-objects -fomit-frame-pointer -fstack-protector-strong -fstack-clash-protection -fPIE -fexceptions --param=ssp-buffer-size=4 -grecord-gcc-switches -pie -fno-semantic-interposition -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wformat-security -Wno-error=strict-aliasing -Wextra -Wp,-D_FORTIFY_SOURCE=2 -D_GLIBCXX_ASSERTIONS --with-file-aio --user=nginx --with-ld-opt=-O3 -Wl,-Bsymbolic-functions -Wl,-z,relro --with-openssl-opt='enable-tls1_3 enable-ec_nistp_64_gcc_128 enable-ktls threads no-ssl no-tls1 no-tls1_1 no-weak-ssl-ciphers no-tests' --with-pcre-jit --with-threads --without-http_autoindex_module --without-http_ssi_module --without-http_dav_module --without-http_f4f_module --without-http_fastcgi_module --without-http_index_module --without-http_mp4_module --without-http_perl_module --without-http_scgi_module --without-http_uwsgi_module --without-http_xslt_module"
